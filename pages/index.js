@@ -1,9 +1,11 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useState } from "react";
 
 export default function Home() {
+  
+  const [title, setTitle] = useState('Alan Walker');
+  const [searchResults, setSearchResults] = useState(null);
+  const [lyrics, setLyrics] = useState(null);
+
   return (
     <div className="flex flex-col md:px-12 px-0 relative bg-background font-poppins items-center min-h-screen">
       <h1 className="text-6xl font-bold text-primary mt-10">
@@ -13,10 +15,20 @@ export default function Home() {
         Get the complete lyrics of any given track.
       </h2>
 
-      <form className="sm:mx-auto mt-20 justify-center sm:w-full sm:flex">
+      <form className="sm:mx-auto mt-20 justify-center sm:w-full sm:flex"
+        onSubmit={e => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}  
+      >
         <input type="text"
           className="flex w-full sm:w-1/3 rounded-lg px-5 py-3 text-base text-background font-semibold focus:outline-none focus:ring-2 focus:ring-active"
           placeholder="Enter a track or artist name eg: Alan Walker"
+          onChange={e => {
+            setTitle(e.target.value);
+            setSearchResults(null);
+            setLyrics(null);
+          }}
         />
 
         <div className="mt-4 sm:mt-0 sm:ml-3">

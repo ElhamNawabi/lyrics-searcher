@@ -1,10 +1,42 @@
 import { useState } from "react";
+import axios from "axios";
 
 export default function Home() {
   
   const [title, setTitle] = useState('Alan Walker');
   const [searchResults, setSearchResults] = useState(null);
   const [lyrics, setLyrics] = useState(null);
+
+
+  const getResults = async () => {
+    try {
+      const res = await axios.get('api/search/', {
+        params: {title}
+      });
+      console.log(res);
+      setSearchResults(res.data.hits);
+    } catch (error) {
+      console.log(`here is error`);
+      console.log(error);
+    }
+    console.log(`exiting getResults`)
+  };
+
+  const getLyrics = async (id) => {
+    try {
+      console.log(`just entered try`)
+      setSearchResults(null);
+      const res = await axios.get('api/lyrics/', {
+        params: {id, plain}
+      });
+      console.log(res);
+      setLyrics(res.data.lyrics);
+      console.log(lyrics);
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex flex-col md:px-12 px-0 relative bg-background font-poppins items-center min-h-screen">
@@ -17,6 +49,7 @@ export default function Home() {
 
       <form className="sm:mx-auto mt-20 justify-center sm:w-full sm:flex"
         onSubmit={e => {
+          getResults();
           e.preventDefault();
           e.stopPropagation();
         }}  
@@ -40,6 +73,54 @@ export default function Home() {
           </button>
         </div>
       </form>
+
+      {searchResults && (
+        <div className="mt-10">
+          <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {searchResults.map(song => (
+              <div key={song.result.id} className="pt-6">
+                <div className="flow-root bg-light rounded-lg px-4 pb-8">
+                  <div className="-mt-6">
+                    <div className="flex items-center justify-center">
+                      <span className="p-2">
+                        <img src={song.result.song_art_image_thumbnail_url}
+                          className="w-full h-full rounded-lg"
+                          alt={song.result.song_art_image_thumbnail_url}
+                        />
+                      </span>
+                    </div>
+                    <div className="text-center justify-center items-center">
+                      <h3 className="mt-4 text-lg font-bold w-full break-words overflow-x-auto text-primary tracking-tight">
+                        {song.result.title}
+                      </h3>
+                      <span className="mt-2 text-sm text-secondary block">
+                        {song.result.artist_names}
+                      </span>
+                      <button className="mt-5 text-md text-active"
+                        onClick={() => {
+                          getLyrics(song.result.id);
+                        }}
+                      >
+                        Get Lyrics &rarr;
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {lyrics && (
+        <div className="mt-10 max-w-2xl">
+          <h2 className="text-2xl font-bold text-center text-active">
+          Lyrics for {lyrics.tracking_data.title}
+          </h2>
+          <p className="mt-6 leading-loose text-primary text-xl">
+            {lyrics.lyrics.body}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

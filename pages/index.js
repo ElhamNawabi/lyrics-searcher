@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import cheerio from "cheerio";
 
 export default function Home() {
   
@@ -22,21 +23,24 @@ export default function Home() {
     console.log(`exiting getResults`)
   };
 
-  const getLyrics = async (id) => {
+  async function lyricScraper(lyricsUrl) {
     try {
-      console.log(`just entered try`)
-      setSearchResults(null);
-      const res = await axios.get('api/lyrics/', {
-        params: {id, plain}
+      const response = await axios.get('http://localhost:8080/getLyrics', {
+        params: { url: lyricsUrl}
       });
-      console.log(res);
-      setLyrics(res.data.lyrics);
-      console.log(lyrics);
+      console.log(response);
+      if (response.status === 200) {
+        const $ = cheerio.load(response.data);
+        const lyrics = $('.lyrics').text();
+        
+        return lyrics.trim();
+      }
     }
     catch (error) {
-      console.log(error);
+      console.log(`bruh we fucked up`)
+      console.error('Error:', error);
     }
-  };
+  }
 
   return (
     <div className="flex flex-col md:px-12 px-0 relative bg-background font-poppins items-center min-h-screen">
@@ -77,37 +81,41 @@ export default function Home() {
       {searchResults && (
         <div className="mt-10">
           <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {searchResults.map(song => (
-              <div key={song.result.id} className="pt-6">
-                <div className="flow-root bg-light rounded-lg px-4 pb-8">
-                  <div className="-mt-6">
-                    <div className="flex items-center justify-center">
-                      <span className="p-2">
-                        <img src={song.result.song_art_image_thumbnail_url}
-                          className="w-full h-full rounded-lg"
-                          alt={song.result.song_art_image_thumbnail_url}
-                        />
-                      </span>
-                    </div>
-                    <div className="text-center justify-center items-center">
-                      <h3 className="mt-4 text-lg font-bold w-full break-words overflow-x-auto text-primary tracking-tight">
-                        {song.result.title}
-                      </h3>
-                      <span className="mt-2 text-sm text-secondary block">
-                        {song.result.artist_names}
-                      </span>
-                      <button className="mt-5 text-md text-active"
-                        onClick={() => {
-                          getLyrics(song.result.id);
-                        }}
-                      >
-                        Get Lyrics &rarr;
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+            {searchResults.map(song => {
+  console.log(song); // This will log the song object
+  return (
+    <div key={song.result.id} className="pt-6">
+      <div className="flow-root bg-light rounded-lg px-4 pb-8">
+        <div className="-mt-6">
+          <div className="flex items-center justify-center">
+            <span className="p-2">
+              <img src={song.result.song_art_image_thumbnail_url}
+                className="w-full h-full rounded-lg"
+                alt={song.result.song_art_image_thumbnail_url}
+              />
+            </span>
+          </div>
+          <div className="text-center justify-center items-center">
+            <h3 className="mt-4 text-lg font-bold w-full break-words overflow-x-auto text-primary tracking-tight">
+              {song.result.title}
+            </h3>
+            <span className="mt-2 text-sm text-secondary block">
+              {song.result.artist_names}
+            </span>
+            <button className="mt-5 text-md text-active"
+              onClick={() => {
+                console.log(song.result.url);
+                lyricScraper(song.result.url);
+              }}
+            >
+              Get Lyrics &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+})}
           </div>
         </div>
       )}

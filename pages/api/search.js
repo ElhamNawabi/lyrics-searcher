@@ -13,7 +13,6 @@ export default async function handler(req, res) {
         },
         headers: {
             'Authorization': process.env.NEXT_PUBLIC_RAPIDAPI_KEY
-            
         }
     };
     try {

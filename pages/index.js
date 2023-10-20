@@ -3,7 +3,7 @@ import axios from "axios";
 import cheerio from "cheerio";
 
 export default function Home() {
-  
+
   const [title, setTitle] = useState('Alan Walker');
   const [searchResults, setSearchResults] = useState(null);
   const [lyrics, setLyrics] = useState(null);
@@ -12,7 +12,7 @@ export default function Home() {
   const getResults = async () => {
     try {
       const res = await axios.get('api/search/', {
-        params: {title}
+        params: { title }
       });
       console.log(res);
       setSearchResults(res.data.hits);
@@ -25,15 +25,16 @@ export default function Home() {
 
   async function lyricScraper(lyricsUrl) {
     try {
+      setSearchResults(null);
       const response = await axios.get('http://localhost:8080/getLyrics', {
-        params: { url: lyricsUrl}
+        params: { url: lyricsUrl }
       });
-      console.log(response);
       if (response.status === 200) {
+        console.log(response);
         const $ = cheerio.load(response.data);
-        const lyrics = $('.lyrics').text();
-        
-        return lyrics.trim();
+        const lyricsContainer = $('[data-lyrics-container="true"]').text();
+        console.log(lyricsContainer);
+        setLyrics(lyricsContainer);
       }
     }
     catch (error) {
@@ -56,7 +57,7 @@ export default function Home() {
           getResults();
           e.preventDefault();
           e.stopPropagation();
-        }}  
+        }}
       >
         <input type="text"
           className="flex w-full sm:w-1/3 rounded-lg px-5 py-3 text-base text-background font-semibold focus:outline-none focus:ring-2 focus:ring-active"
@@ -69,7 +70,7 @@ export default function Home() {
         />
 
         <div className="mt-4 sm:mt-0 sm:ml-3">
-          <button 
+          <button
             className="block w-full rounded-lg px-5 py-3 bg-active text-base text-primary font-bold hover:text-active hover:bg-primary sm:px-10"
             type="submit"
           >
@@ -82,50 +83,51 @@ export default function Home() {
         <div className="mt-10">
           <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {searchResults.map(song => {
-  console.log(song); // This will log the song object
-  return (
-    <div key={song.result.id} className="pt-6">
-      <div className="flow-root bg-light rounded-lg px-4 pb-8">
-        <div className="-mt-6">
-          <div className="flex items-center justify-center">
-            <span className="p-2">
-              <img src={song.result.song_art_image_thumbnail_url}
-                className="w-full h-full rounded-lg"
-                alt={song.result.song_art_image_thumbnail_url}
-              />
-            </span>
-          </div>
-          <div className="text-center justify-center items-center">
-            <h3 className="mt-4 text-lg font-bold w-full break-words overflow-x-auto text-primary tracking-tight">
-              {song.result.title}
-            </h3>
-            <span className="mt-2 text-sm text-secondary block">
-              {song.result.artist_names}
-            </span>
-            <button className="mt-5 text-md text-active"
-              onClick={() => {
-                console.log(song.result.url);
-                lyricScraper(song.result.url);
-              }}
-            >
-              Get Lyrics &rarr;
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-})}
+              // This will log the song object
+              return (
+                <div key={song.result.id} className="pt-6">
+                  <div className="flow-root bg-light rounded-lg px-4 pb-8">
+                    <div className="-mt-6">
+                      <div className="flex items-center justify-center">
+                        <span className="p-2">
+                          <img src={song.result.song_art_image_thumbnail_url}
+                            className="w-full h-full rounded-lg"
+                            alt={song.result.song_art_image_thumbnail_url}
+                          />
+                        </span>
+                      </div>
+                      <div className="text-center justify-center items-center">
+                        <h3 className="mt-4 text-lg font-bold w-full break-words overflow-x-auto text-primary tracking-tight">
+                          {song.result.title}
+                        </h3>
+                        <span className="mt-2 text-sm text-secondary block">
+                          {song.result.artist_names}
+                        </span>
+                        <button className="mt-5 text-md text-active"
+                          onClick={() => {
+                            console.log(song.result.url);
+                            lyricScraper(song.result.url);
+                            console.log(lyrics)
+                          }}
+                        >
+                          Get Lyrics
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
       {lyrics && (
         <div className="mt-10 max-w-2xl">
           <h2 className="text-2xl font-bold text-center text-active">
-          Lyrics for {lyrics.tracking_data.title}
+            Lyrics for niggas
           </h2>
           <p className="mt-6 leading-loose text-primary text-xl">
-            {lyrics.lyrics.body}
+            {lyrics}
           </p>
         </div>
       )}

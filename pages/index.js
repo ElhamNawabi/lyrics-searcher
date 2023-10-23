@@ -7,7 +7,7 @@ export default function Home() {
   const [title, setTitle] = useState('Alan Walker');
   const [searchResults, setSearchResults] = useState(null);
   const [lyrics, setLyrics] = useState(null);
-
+  const [songTitle, setSongTitle] = useState(null);
 
   const getResults = async () => {
     try {
@@ -107,7 +107,7 @@ export default function Home() {
                           onClick={() => {
                             console.log(song.result.url);
                             lyricScraper(song.result.url);
-                            console.log(lyrics)
+                            setSongTitle(song.result.title);
                           }}
                         >
                           Get Lyrics
@@ -124,7 +124,7 @@ export default function Home() {
       {lyrics && (
         <div className="mt-10 max-w-2xl">
           <h2 className="text-2xl font-bold text-center text-active">
-            Lyrics for niggas
+            Lyrics for {songTitle}
           </h2>
           <p className="mt-6 leading-loose text-primary text-xl">
             {lyrics}

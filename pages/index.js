@@ -32,7 +32,23 @@ export default function Home() {
       if (response.status === 200) {
         console.log(response);
         const $ = cheerio.load(response.data);
-        const lyricsContainer = $('[data-lyrics-container="true"]').text();
+        let lyricsContainer = $('div[class^="Lyrics__Container"]').html();
+
+        // Replace <br> and </br> with a space
+        lyricsContainer = lyricsContainer.replace(/<br>/g, ' ').replace(/<\/br>/g, ' ');
+
+        // Replace [Verse], [Chorus], etc. with a newline + the original text
+        lyricsContainer = lyricsContainer.replace(/\[(.*?)\]/g, '\n[$1]');
+
+        // Remove any remaining HTML tags
+        lyricsContainer = lyricsContainer.replace(/<.*?>/g, '');
+
+        // Replace multiple spaces with a single space
+        lyricsContainer = lyricsContainer.replace(/ +/g, ' ');
+
+        // Trim leading and trailing whitespace
+        lyricsContainer = lyricsContainer.trim();
+        
         console.log(lyricsContainer);
         setLyrics(lyricsContainer);
       }
@@ -83,7 +99,6 @@ export default function Home() {
         <div className="mt-10">
           <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {searchResults.map(song => {
-              // This will log the song object
               return (
                 <div key={song.result.id} className="pt-6">
                   <div className="flow-root bg-light rounded-lg px-4 pb-8">

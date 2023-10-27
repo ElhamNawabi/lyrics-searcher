@@ -2,7 +2,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, go to my proxy server repo, clone and run it!
+Link: https://github.com/ElhamNawabi/proxy-server
+
+Now, you can clone this repo and run it locally!
 
 ```bash
 npm run dev

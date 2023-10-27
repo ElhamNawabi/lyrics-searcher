@@ -4,7 +4,7 @@ import cheerio from "cheerio";
 
 export default function Home() {
 
-  const [title, setTitle] = useState('Alan Walker');
+  const [title, setTitle] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [lyrics, setLyrics] = useState(null);
   const [songTitle, setSongTitle] = useState(null);
@@ -54,7 +54,6 @@ export default function Home() {
       }
     }
     catch (error) {
-      console.log(`bruh we fucked up`)
       console.error('Error:', error);
     }
   }
@@ -77,7 +76,7 @@ export default function Home() {
       >
         <input type="text"
           className="flex w-full sm:w-1/3 rounded-lg px-5 py-3 text-base text-background font-semibold focus:outline-none focus:ring-2 focus:ring-active"
-          placeholder="Enter a track or artist name eg: Alan Walker"
+          placeholder="Enter a track or artist's name"
           onChange={e => {
             setTitle(e.target.value);
             setSearchResults(null);

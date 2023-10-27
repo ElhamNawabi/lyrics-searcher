@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         url: 'https://api.genius.com/search',
         params: {
             q: req.query.title,
-            per_page: '10',
+            per_page: '12',
             page: '1'
         },
         headers: {

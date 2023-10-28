@@ -12,7 +12,7 @@ export default async function handler(req, res) {
             page: '1'
         },
         headers: {
-            'Authorization': process.env.NEXT_PUBLIC_RAPIDAPI_KEY
+            'Authorization': process.env.GENIUS_API_KEY
         }
     };
     try {

@@ -61,12 +61,19 @@ export default function Home() {
   return (
     <div className="flex flex-col md:px-12 px-0 relative bg-background font-poppins items-center min-h-screen">
       <h1 className="text-6xl font-bold text-primary mt-10">
-        <span className="text-active">Lyrics</span> App
+        <span className="text-active">Lyrics</span> Searcher
       </h1>
       <h2 className="text-primary text-2xl font-light mt-6">
         Get the complete lyrics of any given track.
       </h2>
 
+      <h2 className="text-primary text-2xl font-light mt-6">To have this fully functional, go to my github repo to clone and run the proxy server!</h2>
+
+      <a href="https://github.com/ElhamNawabi/proxy-server" target="_blank" rel="noopener noreferrer" 
+        style={{paddingTop: '20px'}}>
+        <h3 className="text-primary text-2xl font-light mt-6">Click: Proxy Server</h3>
+      </a>
+      
       <form className="sm:mx-auto mt-20 justify-center sm:w-full sm:flex"
         onSubmit={e => {
           getResults();

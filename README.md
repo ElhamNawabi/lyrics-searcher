@@ -4,7 +4,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 First, go to my proxy server repo, clone and run it!
 
-Link: https://github.com/ElhamNawabi/proxy-server
+Link to Proxy Server: https://github.com/ElhamNawabi/proxy-server
+
+Link to site: lyrics-searcher-woad.vercel.app
 
 Now, you can get the lyrics! (Searching and receiving the top 12 artists/songs will still work without the server running)
 

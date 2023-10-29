@@ -6,7 +6,7 @@ First, go to my proxy server repo, clone and run it!
 
 Link: https://github.com/ElhamNawabi/proxy-server
 
-Now, you can clone this repo and run it locally!
+Now, you can get the lyrics! (Searching and receiving the top 12 artists/songs will still work without the server running)
 
 ```bash
 npm run dev
